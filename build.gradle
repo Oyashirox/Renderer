@@ -11,7 +11,7 @@ repositories {
 }
 
 application {
-    mainClassName = "MainKt"
+    mainClassName = "fr.oyashirox.MainKt"
 }
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
