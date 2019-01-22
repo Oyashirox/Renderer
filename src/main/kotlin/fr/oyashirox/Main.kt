@@ -23,7 +23,7 @@ fun line(p1: Point, p2: Point, image: Image, color: Color) {
     val range = IntProgression.fromClosedRange(p1.x, p2.x, step)
     val dx = p1.horizontalDistanceTo(p2)
     val dy = p1.verticalDistanceTo(p2)
-    val m = dy / dx.toFloat() // Slope of the line
+    val m = dy * 2 // Slope of the line
     var error = 0.0
     var y = p1.y // Starts at p1, then increase of m after each step
     for (x in range) {
@@ -33,9 +33,9 @@ fun line(p1: Point, p2: Point, image: Image, color: Color) {
             image[x, y] = color
         }
         error += m
-        if (error > 0.5) {
+        if (error > dx) {
             y += step
-            error -= 1
+            error -= dx * 2
         }
     }
 }
