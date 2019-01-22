@@ -14,7 +14,13 @@ class Image(val width: Int, val height: Int) {
         data[x + y * width] = color
     }
 
-    inline fun flipVertically() = data.reverse()
+    inline fun flipVertically() = data.asIterable()
+        .chunked(width)
+        .asReversed()
+        .flatten()
+        .forEachIndexed { index, color ->
+            data[index] = color
+        }
 
     fun saveToDisk(): File {
         val bufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
