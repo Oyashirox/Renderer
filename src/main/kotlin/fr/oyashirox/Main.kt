@@ -11,7 +11,9 @@ import kotlin.system.measureTimeMillis
 val red = Color(255)
 val white = Color(255, 255, 255)
 
-fun line(p1: Point, p2: Point, image: Image, color: Color) {
+fun line(start: Point, end: Point, image: Image, color: Color) {
+    val p1 = start.copy()
+    val p2 = end.copy()
     // We always want to iterate on the longest axis, so if it is the vertical,
     // we swap x and y so iterating on x means iterating on y
     val swapped = if (p1.horizontalDistanceTo(p2) < p1.verticalDistanceTo(p2)) {
@@ -21,13 +23,15 @@ fun line(p1: Point, p2: Point, image: Image, color: Color) {
     } else {
         false
     }
-    val step = if (p1.x < p2.x) 1 else -1 // Handle both direction on x
-    val range = IntProgression.fromClosedRange(p1.x, p2.x, step)
+    // Handle both direction on x
+    val range = IntProgression.fromClosedRange(p1.x, p2.x, if (p1.x < p2.x) 1 else -1)
     val dx = p1.horizontalDistanceTo(p2)
     val dy = p1.verticalDistanceTo(p2)
     val m = dy * 2 // Slope of the line
     var error = 0.0
     var y = p1.y // Starts at p1, then increase of m after each step
+    val step = if (p1.y < p2.y) 1 else -1
+
     for (x in range) {
         if (swapped) {
             image[y, x] = color // Transpose back the swapped coordinates
