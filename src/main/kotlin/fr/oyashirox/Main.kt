@@ -3,7 +3,9 @@ package fr.oyashirox
 import fr.oyashirox.math.Color
 import fr.oyashirox.math.Image
 import fr.oyashirox.math.Point
+import fr.oyashirox.model.Model
 import java.awt.Desktop
+import java.nio.file.Paths
 import kotlin.system.measureTimeMillis
 
 val red = Color(255)
@@ -44,6 +46,9 @@ fun main(args: Array<String>) {
     val image = Image(100, 100)
 
     val time = measureTimeMillis {
+        val africanHeadFile = Paths.get(".","obj", "african_head.obj").toAbsolutePath().normalize().toFile()
+        val model = Model.fromObjFile(africanHeadFile)
+
         line(p1 = Point(13, 20), p2 = Point(80, 40), image = image, color = white)
         line(p1 = Point(20, 13), p2 = Point(40, 80), image = image, color = red)
         line(p1 = Point(80, 40), p2 = Point(13, 20), image = image, color = red)
