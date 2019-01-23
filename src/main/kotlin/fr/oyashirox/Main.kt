@@ -46,17 +46,39 @@ fun line(start: Point, end: Point, image: Image, color: Color) {
     }
 }
 
+fun renderWireframeModel(model: Model, image: Image) {
+    val halfWidth = (image.width - 1) / 2.0f
+    val halfHeight = (image.height - 1) / 2.0f
+    model.faces.forEach { face ->
+        val points = face
+            .map { model.vertices[it] }
+            .map {
+                val x = ((it.x + 1) * halfWidth).toInt()
+                val y = ((it.y + 1) * halfHeight).toInt()
+                Point(
+                    x,
+                    y
+                )
+            }
+        points.forEachIndexed { index, point ->
+            try {
+                val point2 = points[(index + 1) % 3]
+                line(point, point2, image, white)
+            } catch (e: Exception) {
+                println(e.localizedMessage)
+            }
+        }
+    }
+}
+
 fun main(args: Array<String>) {
-    val image = Image(100, 100)
+    val image = Image(800, 800)
 
     val time = measureTimeMillis {
-        val africanHeadFile = Paths.get(".","obj", "african_head.obj").toAbsolutePath().normalize().toFile()
+        val africanHeadFile = Paths.get(".", "obj", "african_head.obj").toAbsolutePath().normalize().toFile()
         val model = Model.fromObjFile(africanHeadFile)
+        renderWireframeModel(model, image)
 
-        line(p1 = Point(13, 20), p2 = Point(80, 40), image = image, color = white)
-        line(p1 = Point(20, 13), p2 = Point(40, 80), image = image, color = red)
-        line(p1 = Point(80, 40), p2 = Point(13, 20), image = image, color = red)
-        // Flip vertically allows us to have the (0,0) at the bottom-left instead of up-left
         image.flipVertically()
     }
 
