@@ -12,7 +12,10 @@ data class Color(val r: Byte, val g: Byte, val b: Byte, val a: Byte = 0xFF.toByt
         (a * 255).toByte()
     )
 
-    var argbColor: Int = (a shl 24) or (r shl 16) or (g shl 8) or b.toInt()
+    var argbColor: Int = ((a shl 24) and 0xFF000000.toInt()) or
+            ((r shl 16) and 0x00FF0000) or
+            ((g shl 8) and 0x0000FF00) or
+            (b.toInt() and 0x000000FF)
 
     inline operator fun plus(o: Color) = Color(r + o.r, g + o.g, b + o.b)
 
