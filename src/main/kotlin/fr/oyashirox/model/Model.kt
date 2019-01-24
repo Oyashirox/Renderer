@@ -3,7 +3,9 @@ package fr.oyashirox.model
 import fr.oyashirox.math.Vector
 import java.io.File
 
-data class Model(val vertices: List<Vector>, val faces: List<List<Int>>) {
+data class Model(val vertices: List<Vector>, private val facesIndex: List<List<Int>>) {
+    val faces: List<Face> = facesIndex.map { Face.fromIndexes(vertices, it) }
+
     companion object {
         fun fromObjFile(file: File): Model {
             val reader = file.bufferedReader()

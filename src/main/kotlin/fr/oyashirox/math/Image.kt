@@ -6,6 +6,7 @@ import java.nio.file.Paths
 import javax.imageio.ImageIO
 
 @Suppress("NOTHING_TO_INLINE", "MemberVisibilityCanBePrivate")
+/** Represents an Image. You can [set pixel colors][set] and [save it on the disk][saveToDisk]. */
 class Image(val width: Int, val height: Int) {
     val data = Array(width * height) { Color() }
 
