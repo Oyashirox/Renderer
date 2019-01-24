@@ -41,4 +41,45 @@ class Canvas(val image: Image) {
         }
     }
 
+    fun triangleLineSweeping(points: List<Point>, color: Color) {
+        val (p1, p2, p3) = points.sortedBy { it.y }
+        val longSide = p3 - p1 // Long side is between the lowest and highest point
+        val shortSide1 = p2 - p1 // First part of the short side is between the lowest and middle point
+        val shortSide2 = p3 - p2 // First part of the short side is between the middle and highest point
+        triangleLineSweepingSubPart(p1.y..p2.y, p1, p1, longSide, shortSide1, color)
+        triangleLineSweepingSubPart(p2.y..p3.y, p1, p2, longSide, shortSide2, color)
+    }
+
+    @Suppress("NOTHING_TO_INLINE")
+    /**
+     *  @param yRange range of y axis we are currently sweeping
+     *  @param lowestPoint lowest point (on y axis) of the triangle
+     *  @param startingPoint current starting point of the subpart (its y-coord must be equal to the lowest of yRange)
+     *  @param longSide unit vector for the longest side
+     *  @param shortSide unit vector for the current short side
+     *
+     * */
+    private inline fun triangleLineSweepingSubPart(
+        yRange: IntRange,
+        lowestPoint: Point,
+        startingPoint: Point,
+        longSide: Point,
+        shortSide: Point,
+        color: Color
+    ) {
+        for (y in yRange) {
+            val i =
+                (y - yRange.start) / shortSide.y.toFloat() // normalize current position in [0, 1] along the first short side
+            val j =
+                (y - lowestPoint.y) / longSide.y.toFloat()  // normalize current position in [0, 1] along the long side
+            val xShortSide = (startingPoint.x + shortSide.x * i).toInt()
+            val xLongSide = (lowestPoint.x + longSide.x * j).toInt()
+
+            val range = IntProgression.fromClosedRange(xShortSide, xLongSide, if (xShortSide < xLongSide) 1 else -1)
+            for (x in range) {
+                image[x, y] = color
+            }
+        }
+    }
+
 }
