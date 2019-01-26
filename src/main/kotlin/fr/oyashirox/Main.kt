@@ -16,9 +16,9 @@ fun main() {
         val t2 = listOf(Point(180, 50), Point(150, 1), Point(70, 180))
         val t3 = listOf(Point(180, 150), Point(120, 160), Point(130, 180))
 
-        canvas.triangleLineSweeping(t1, Color.RED)
-        canvas.triangleLineSweeping(t2, Color.GREEN)
-        canvas.triangleLineSweeping(t3, Color.BLUE)
+        canvas.triangle(t1, Color.RED)
+        canvas.triangle(t2, Color.GREEN)
+        canvas.triangle(t3, Color.BLUE)
 
         image.flipVertically()
     }

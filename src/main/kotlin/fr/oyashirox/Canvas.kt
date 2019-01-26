@@ -3,6 +3,7 @@ package fr.oyashirox
 import fr.oyashirox.math.Color
 import fr.oyashirox.math.Image
 import fr.oyashirox.math.Point
+import fr.oyashirox.math.Vector
 
 /** Use this class to draw stuff on an image (like [line])*/
 class Canvas(val image: Image) {
@@ -82,4 +83,25 @@ class Canvas(val image: Image) {
         }
     }
 
+    fun triangle(triangle: List<Point>, color: Color) {
+        val min = Point(triangle.minBy { it.x }!!.x, triangle.minBy { it.y }!!.y)
+        val max = Point(triangle.maxBy { it.x }!!.x, triangle.maxBy { it.y }!!.y)
+
+        for (x in min.x..max.x) {
+            for (y in min.y..max.y) {
+                val barycenter = barycentric(triangle, Point(x, y))
+                if(barycenter.x < 0 || barycenter.y < 0 || barycenter.z < 0) continue
+                image[x, y] = color
+            }
+        }
+    }
+
+    private fun barycentric(triangle: List<Point>, point: Point): Vector {
+        val (p1, p2, p3) = triangle
+        val xVector = Vector((p3.x - p1.x).toDouble(), (p2.x - p1.x).toDouble(), (p1.x - point.x).toDouble())
+        val yVector = Vector((p3.y - p1.y).toDouble(), (p2.y - p1.y).toDouble(), (p1.y - point.y).toDouble())
+        val u = xVector.cross(yVector)
+
+        return Vector(1.0f - (u.x + u.y) / u.z, u.y / u.z, u.x / u.z)
+    }
 }
