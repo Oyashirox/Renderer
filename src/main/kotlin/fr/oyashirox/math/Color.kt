@@ -11,6 +11,12 @@ data class Color(val r: UByte, val g: UByte, val b: UByte, val a: UByte = 0xFF.t
         (b * 255).toInt().toUByte(),
         (a * 255).toInt().toUByte()
     )
+    constructor(argb: Int): this(
+        ((argb and 0x00FF0000) shr 16).toUByte(),
+        ((argb and 0x0000FF00) shr 8).toUByte(),
+        (argb and 0x000000FF).toUByte(),
+        (argb and 0xFF000000.toInt() shr 24).toUByte()
+    )
 
     var argbColor: Int = ((a shl 24) and 0xFF000000.toInt()) or
             ((r shl 16) and 0x00FF0000) or
@@ -24,7 +30,7 @@ data class Color(val r: UByte, val g: UByte, val b: UByte, val a: UByte = 0xFF.t
     private inline infix fun UByte.shl(shift: Int): Int = this.toInt() shl shift
 
     companion object {
-        val RED = Color(255)
+        val RED = Color(r = 255)
         val GREEN = Color(g = 255)
         val BLUE = Color(b = 255)
         val WHITE = Color(255, 255, 255)

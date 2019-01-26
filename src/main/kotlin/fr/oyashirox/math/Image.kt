@@ -7,8 +7,12 @@ import javax.imageio.ImageIO
 
 @Suppress("NOTHING_TO_INLINE", "MemberVisibilityCanBePrivate")
 /** Represents an Image. You can [set pixel colors][set] and [save it on the disk][saveToDisk]. */
-class Image(val width: Int, val height: Int) {
-    val data = Array(width * height) { Color() }
+class Image(val width: Int, val height: Int, argbArray: IntArray? = null) {
+    val data = if(argbArray == null) {
+        Array(width * height) { Color() }
+    } else {
+        Array(width * height) { Color(argb = argbArray[it]) }
+    }
 
     inline operator fun get(x: Int, y: Int) = data[x + y * width]
     inline operator fun set(x: Int, y: Int, color: Color) {

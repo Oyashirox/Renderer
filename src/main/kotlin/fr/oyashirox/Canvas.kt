@@ -98,9 +98,7 @@ class Canvas(val image: Image) {
             for (y in min.y..max.y) {
                 val barycenter = barycentric(triangle, Point(x, y))
                 if (barycenter.x < 0 || barycenter.y < 0 || barycenter.z < 0) continue
-                val zValue = barycenter.x * triangle[0].zBuffer +
-                        barycenter.y * triangle[1].zBuffer +
-                        barycenter.z * triangle[2].zBuffer
+                val zValue = interpolate(barycenter, triangle) { zBuffer }
                 val index = x + y * image.width
                 if (zBuffer[index] < zValue) {
                     zBuffer[index] = zValue
@@ -125,4 +123,10 @@ class Canvas(val image: Image) {
         else
             Vector(-1.0, 1.0, 1.0)
     }
+
+    private fun <T> interpolate(weights: Vector, values: List<T>, value: T.() -> Double) =
+        weights.x * values[0].value() +
+                weights.y * values[1].value() +
+                weights.z * values[2].value()
+
 }
