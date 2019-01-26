@@ -1,6 +1,7 @@
 package fr.oyashirox
 
 import fr.oyashirox.math.Image
+import fr.oyashirox.math.Vector
 import fr.oyashirox.model.Model
 import java.awt.Desktop
 import java.nio.file.Paths
@@ -15,7 +16,7 @@ fun main() {
     val time = measureTimeMillis {
         val africanHeadFile = Paths.get(".", "obj", "african_head.obj").toAbsolutePath().normalize().toFile()
         val model = Model.fromObjFile(africanHeadFile)
-        renderer.renderFlat(model)
+        renderer.render(model, Vector(0.0, 0.0, -1.0).normalize())
 
         image.flipVertically()
     }
