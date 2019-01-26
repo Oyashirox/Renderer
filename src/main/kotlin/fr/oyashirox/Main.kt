@@ -1,10 +1,12 @@
 package fr.oyashirox
 
 import fr.oyashirox.math.Image
+import fr.oyashirox.math.Vector
 import fr.oyashirox.model.Model
 import fr.oyashirox.model.Texture
 import java.awt.Desktop
 import java.nio.file.Paths
+import kotlin.system.measureTimeMillis
 
 
 fun main() {
@@ -18,12 +20,12 @@ fun main() {
     val model = Model.fromObjFile(africanHeadFile)
     val texture = Texture.loadFromFile(africanHeadTexture)
 
-//    val time = measureTimeMillis {
-//        renderer.render(model, Vector(0.0, 0.0, -1.0).normalize())
-//        image.flipVertically()
-//    }
-//    println("time: ${time / 1000.0} s")
+    val time = measureTimeMillis {
+        renderer.render(model, texture, Vector(0.0, 0.0, -1.0).normalize())
+        image.flipVertically()
+    }
+    println("time: ${time / 1000.0} s")
 
-    val path = texture.image.saveToDisk()
+    val path = image.saveToDisk()
     Desktop.getDesktop().open(path)
 }

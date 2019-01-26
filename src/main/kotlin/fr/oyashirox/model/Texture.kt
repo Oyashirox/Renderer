@@ -1,6 +1,7 @@
 package fr.oyashirox.model
 
 import fr.oyashirox.math.Image
+import fr.oyashirox.math.Vector
 import java.io.File
 import javax.imageio.ImageIO
 
@@ -13,7 +14,18 @@ class Texture(val image: Image) {
                 null, 0, bufferedImage.width
             )
             val image = Image(bufferedImage.width, bufferedImage.height, array)
+            image.flipVertically()
             return Texture(image)
         }
     }
+
+    operator fun get(x: Double, y: Double) = image[
+            (x * (image.width - 1)).toInt(),
+            (y * (image.height - 1)).toInt()
+    ]
+
+    operator fun get(vector: Vector) = image[
+            (vector.x * (image.width - 1)).toInt(),
+            (vector.y * (image.height - 1)).toInt()
+    ]
 }

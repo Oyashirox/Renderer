@@ -1,12 +1,12 @@
 package fr.oyashirox
 
-import fr.oyashirox.math.Color
-import fr.oyashirox.math.Image
-import fr.oyashirox.math.Point
-import fr.oyashirox.math.Vector
+import fr.oyashirox.math.*
+import fr.oyashirox.model.Face
+import fr.oyashirox.model.Texture
 import kotlin.math.abs
 
 /** Use this class to draw stuff on an image (like [line])*/
+@Suppress("unused")
 class Canvas(val image: Image) {
     private val zBuffer = DoubleArray(image.width * image.height).apply { fill(-Double.MAX_VALUE) }
     fun resetZBuffer() = zBuffer.fill(-Double.MAX_VALUE)
@@ -108,6 +108,27 @@ class Canvas(val image: Image) {
         }
     }
 
+    fun triangle(triangle: List<Point>, face: Face, texture: Texture, intensity: Double) {
+        val min = Point(triangle.minBy { it.x }!!.x, triangle.minBy { it.y }!!.y)
+        val max = Point(triangle.maxBy { it.x }!!.x, triangle.maxBy { it.y }!!.y)
+
+        for (x in min.x..max.x) {
+            for (y in min.y..max.y) {
+                val barycenter = barycentric(triangle, Point(x, y))
+                if (barycenter.x < 0 || barycenter.y < 0 || barycenter.z < 0) continue
+                val zValue = interpolate(barycenter, triangle) { zBuffer }
+                val textCoords = interpolate(barycenter, face.textures)
+                val color = intensity * texture[textCoords]
+
+                val index = x + y * image.width
+                if (zBuffer[index] < zValue) {
+                    zBuffer[index] = zValue
+                    image[x, y] = color
+                }
+            }
+        }
+    }
+
     private fun barycentric(triangle: List<Point>, point: Point): Vector {
         val (p1, p2, p3) = triangle
         //x is along AC, y is along AB and z is along AP
@@ -128,5 +149,10 @@ class Canvas(val image: Image) {
         weights.x * values[0].value() +
                 weights.y * values[1].value() +
                 weights.z * values[2].value()
+
+    private fun interpolate(weights: Vector, values: List<Vector>): Vector =
+        weights.x * values[0] +
+                weights.y * values[1] +
+                weights.z * values[2]
 
 }

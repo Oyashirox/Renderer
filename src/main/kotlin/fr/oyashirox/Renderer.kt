@@ -5,8 +5,8 @@ package fr.oyashirox
 import fr.oyashirox.math.Color
 import fr.oyashirox.math.Point
 import fr.oyashirox.math.Vector
-import fr.oyashirox.math.times
 import fr.oyashirox.model.Model
+import fr.oyashirox.model.Texture
 import kotlin.random.Random
 
 /** Use this class to render a model on a canvas*/
@@ -43,7 +43,7 @@ class Renderer(val canvas: Canvas) {
         }
     }
 
-    fun render(model: Model, lightDir: Vector) {
+    fun render(model: Model, texture: Texture, lightDir: Vector) {
         model.faces.forEach { face ->
             // Convert world to screen coord (orthographic)
             val points = face.vertices.map(::mapToScreen)
@@ -51,9 +51,8 @@ class Renderer(val canvas: Canvas) {
             val normal = (face.vertices[2] - face.vertices[0]).cross(face.vertices[1] - face.vertices[0]).normalize()
             val intensity = lightDir.dot(normal).coerceAtLeast(0.0)
             if (intensity > 0) {
-                val lightColor = intensity * (Color.WHITE)
                 // Create the triangle
-                canvas.triangle(points, lightColor)
+                canvas.triangle(points, face, texture, intensity)
             }
         }
     }
