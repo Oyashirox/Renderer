@@ -4,9 +4,13 @@ import fr.oyashirox.math.Color
 import fr.oyashirox.math.Image
 import fr.oyashirox.math.Point
 import fr.oyashirox.math.Vector
+import kotlin.math.abs
 
 /** Use this class to draw stuff on an image (like [line])*/
 class Canvas(val image: Image) {
+    private val zBuffer = DoubleArray(image.width * image.height).apply { fill(-Double.MAX_VALUE) }
+    fun resetZBuffer() = zBuffer.fill(-Double.MAX_VALUE)
+
     fun line(start: Point, end: Point, color: Color) {
         val p1 = start.copy()
         val p2 = end.copy()
@@ -94,17 +98,31 @@ class Canvas(val image: Image) {
             for (y in min.y..max.y) {
                 val barycenter = barycentric(triangle, Point(x, y))
                 if (barycenter.x < 0 || barycenter.y < 0 || barycenter.z < 0) continue
-                image[x, y] = color
+                val zValue = barycenter.x * triangle[0].zBuffer +
+                        barycenter.y * triangle[1].zBuffer +
+                        barycenter.z * triangle[2].zBuffer
+                val index = x + y * image.width
+                if (zBuffer[index] < zValue) {
+                    zBuffer[index] = zValue
+                    image[x, y] = color
+                }
             }
         }
     }
 
     private fun barycentric(triangle: List<Point>, point: Point): Vector {
         val (p1, p2, p3) = triangle
+        //x is along AC, y is along AB and z is along AP
         val xVector = Vector((p3.x - p1.x).toDouble(), (p2.x - p1.x).toDouble(), (p1.x - point.x).toDouble())
         val yVector = Vector((p3.y - p1.y).toDouble(), (p2.y - p1.y).toDouble(), (p1.y - point.y).toDouble())
         val u = xVector.cross(yVector)
 
-        return Vector(1.0f - (u.x + u.y) / u.z, u.y / u.z, u.x / u.z)
+        // I'm not completely sure about that but here we
+        // Reorganize so that x is a factor of A, y is a factor of B, and z is a factor of C
+        // Also, dividing by Z because homogeneous coords
+        return if (abs(u.z) > 1e-2)
+            Vector(1.0 - (u.x + u.y) / u.z, u.y / u.z, u.x / u.z)
+        else
+            Vector(-1.0, 1.0, 1.0)
     }
 }
