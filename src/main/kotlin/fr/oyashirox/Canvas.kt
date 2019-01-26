@@ -44,11 +44,14 @@ class Canvas(val image: Image) {
 
     fun triangleLineSweeping(points: List<Point>, color: Color) {
         val (p1, p2, p3) = points.sortedBy { it.y }
+        if (p1.y == p2.y && p1.y == p3.y) return
         val longSide = p3 - p1 // Long side is between the lowest and highest point
         val shortSide1 = p2 - p1 // First part of the short side is between the lowest and middle point
         val shortSide2 = p3 - p2 // First part of the short side is between the middle and highest point
-        triangleLineSweepingSubPart(p1.y..p2.y, p1, p1, longSide, shortSide1, color)
-        triangleLineSweepingSubPart(p2.y..p3.y, p1, p2, longSide, shortSide2, color)
+        if (shortSide1.y > 0)
+            triangleLineSweepingSubPart(p1.y..p2.y, p1, p1, longSide, shortSide1, color)
+        if (shortSide2.y > 0)
+            triangleLineSweepingSubPart(p2.y..p3.y, p1, p2, longSide, shortSide2, color)
     }
 
     @Suppress("NOTHING_TO_INLINE")
@@ -90,7 +93,7 @@ class Canvas(val image: Image) {
         for (x in min.x..max.x) {
             for (y in min.y..max.y) {
                 val barycenter = barycentric(triangle, Point(x, y))
-                if(barycenter.x < 0 || barycenter.y < 0 || barycenter.z < 0) continue
+                if (barycenter.x < 0 || barycenter.y < 0 || barycenter.z < 0) continue
                 image[x, y] = color
             }
         }
