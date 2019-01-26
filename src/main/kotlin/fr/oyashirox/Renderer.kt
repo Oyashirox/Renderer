@@ -47,13 +47,7 @@ class Renderer(val canvas: Canvas) {
         model.faces.forEach { face ->
             // Convert world to screen coord (orthographic)
             val points = face.vertices.map(::mapToScreen)
-
-            val normal = (face.vertices[2] - face.vertices[0]).cross(face.vertices[1] - face.vertices[0]).normalize()
-            val intensity = lightDir.dot(normal).coerceAtLeast(0.0)
-            if (intensity > 0) {
-                // Create the triangle
-                canvas.triangle(points, face, texture, intensity)
-            }
+            canvas.triangle(points, face, texture, lightDir)
         }
     }
 

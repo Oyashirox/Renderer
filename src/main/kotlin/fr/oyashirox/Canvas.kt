@@ -108,7 +108,7 @@ class Canvas(val image: Image) {
         }
     }
 
-    fun triangle(triangle: List<Point>, face: Face, texture: Texture, intensity: Double) {
+    fun triangle(triangle: List<Point>, face: Face, texture: Texture, lightDir: Vector) {
         val min = Point(triangle.minBy { it.x }!!.x, triangle.minBy { it.y }!!.y)
         val max = Point(triangle.maxBy { it.x }!!.x, triangle.maxBy { it.y }!!.y)
 
@@ -116,8 +116,13 @@ class Canvas(val image: Image) {
             for (y in min.y..max.y) {
                 val barycenter = barycentric(triangle, Point(x, y))
                 if (barycenter.x < 0 || barycenter.y < 0 || barycenter.z < 0) continue
+                val normal = interpolate(barycenter, face.normals).normalize()
+                val intensity = normal.dot(-lightDir).coerceAtLeast(0.0)
+                if(intensity <= 0.0) continue
+
                 val zValue = interpolate(barycenter, triangle) { zBuffer }
                 val textCoords = interpolate(barycenter, face.textures)
+
                 val color = intensity * texture[textCoords]
 
                 val index = x + y * image.width
