@@ -15,8 +15,8 @@ fun main() {
     val renderer = Renderer(canvas)
 
     val objFolder = Paths.get(".", "obj").normalize()
-    val africanHeadFile = objFolder.resolve("african_head.obj").toFile()
-    val africanHeadTexture = objFolder.resolve("african_head_diffuse.png").toFile()
+    val africanHeadFile = objFolder.resolve("diablo.obj").toFile()
+    val africanHeadTexture = objFolder.resolve("diablo3_pose_diffuse.png").toFile()
     val model = Model.fromObjFile(africanHeadFile)
     val texture = Texture.loadFromFile(africanHeadTexture)
 

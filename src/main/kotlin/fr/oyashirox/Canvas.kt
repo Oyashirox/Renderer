@@ -118,7 +118,6 @@ class Canvas(val image: Image) {
                 if (barycenter.x < 0 || barycenter.y < 0 || barycenter.z < 0) continue
                 val normal = interpolate(barycenter, face.normals).normalize()
                 val intensity = normal.dot(-lightDir).coerceAtLeast(0.0)
-                if(intensity <= 0.0) continue
 
                 val zValue = interpolate(barycenter, triangle) { zBuffer }
                 val textCoords = interpolate(barycenter, face.textures)
