@@ -3,6 +3,7 @@
 package fr.oyashirox
 
 import fr.oyashirox.math.Color
+import fr.oyashirox.math.Matrix
 import fr.oyashirox.math.Point
 import fr.oyashirox.math.Vector
 import fr.oyashirox.model.Model
@@ -12,14 +13,27 @@ import kotlin.random.Random
 /** Use this class to render a model on a canvas*/
 @Suppress("MemberVisibilityCanBePrivate")
 class Renderer(val canvas: Canvas) {
-    val halfWidth = (canvas.image.width - 1) / 2.0f
-    val halfHeight = (canvas.image.height - 1) / 2.0f
+    val halfWidth = (canvas.image.width - 1) / 2.0
+    val halfHeight = (canvas.image.height - 1) / 2.0
+    val distance = 3.0
+    val viewport = Matrix(4, true).apply {
+        // diagonal
+        // Scale [-1,1] to [-halfWidth,halfWidth]
+        this[0, 0] = halfWidth
+        this[1, 1] = halfHeight
 
-    private fun mapToScreen(world: Vector) = Point(
-        ((world.x + 1) * halfWidth).toInt(),
-        ((world.y + 1) * halfHeight).toInt(),
-        world.z
-    )
+        // rencenter so we get into [0, width]
+        this[0, 3] = halfWidth
+        this[1, 3] = halfHeight
+    }
+    val projection = Matrix(4, true).apply {
+        this[3, 2] = -1.0 / distance
+    }
+
+    private fun mapToScreen(world: Vector): Point {
+        val vector = (viewport * projection * world.toMatrix()).toVector()
+        return vector.toPoint()
+    }
 
     fun renderWireframeModel(model: Model) {
         model.faces.forEach { face ->

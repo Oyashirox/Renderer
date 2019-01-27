@@ -114,6 +114,12 @@ class Canvas(val image: Image) {
 
         for (x in min.x..max.x) {
             for (y in min.y..max.y) {
+                val index = x + y * image.width
+                if (index < 0 || index > image.data.size - 1 ||
+                    x < 0 || x > image.width - 1 ||
+                    y < 0 || y > image.height - 1
+                ) continue
+
                 val barycenter = barycentric(triangle, Point(x, y))
                 if (barycenter.x < 0 || barycenter.y < 0 || barycenter.z < 0) continue
                 val normal = interpolate(barycenter, face.normals).normalize()
@@ -124,7 +130,6 @@ class Canvas(val image: Image) {
 
                 val color = intensity * texture[textCoords]
 
-                val index = x + y * image.width
                 if (zBuffer[index] < zValue) {
                     zBuffer[index] = zValue
                     image[x, y] = color

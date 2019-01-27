@@ -23,9 +23,9 @@ data class Vector(var x: Double = 0.0, var y: Double = 0.0, var z: Double = 0.0)
     inline fun distanceTo(o: Vector) = (this - o).length()
     inline infix fun dot(o: Vector) = x * o.x + y * o.y + z * o.z
     inline infix fun cross(o: Vector) = Vector(
-            y * o.z - z * o.y,
-            z * o.x - x * o.z,
-            x * o.y - y * o.x
+        y * o.z - z * o.y,
+        z * o.x - x * o.z,
+        x * o.y - y * o.x
     )
 
     fun normalize(): Vector {
@@ -34,6 +34,15 @@ data class Vector(var x: Double = 0.0, var y: Double = 0.0, var z: Double = 0.0)
     }
 
     fun toColor() = Color(x, y, z)
+    fun toMatrix() = Matrix(4, false).apply {
+        this[0, 0] = x
+        this[1, 0] = y
+        this[2, 0] = z
+        this[3, 0] = 1.0
+    }
+
+    fun toPoint() = Point(x.toInt(), y.toInt(), z)
+
     inline fun sqrt() = Vector(Math.sqrt(x), Math.sqrt(y), Math.sqrt(z))
 
     /** @param normal should be unit vector.*/
