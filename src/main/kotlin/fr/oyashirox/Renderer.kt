@@ -15,16 +15,19 @@ import kotlin.random.Random
 class Renderer(val canvas: Canvas) {
     val halfWidth = (canvas.image.width - 1) / 2.0
     val halfHeight = (canvas.image.height - 1) / 2.0
-    val distance = 3.0
+    val depth = 255.0
+    val distance = 5.0
     val viewport = Matrix(4, true).apply {
         // diagonal
-        // Scale [-1,1] to [-halfWidth,halfWidth]
+        // Scale [-1,1] to [-halfWidth,halfWidth], same for height and to [-127.5,127.5] for depth
         this[0, 0] = halfWidth
         this[1, 1] = halfHeight
+        this[2, 2] = depth / 2
 
-        // rencenter so we get into [0, width]
+        // rencenter so we get into [0, width], or [0, 255]
         this[0, 3] = halfWidth
         this[1, 3] = halfHeight
+        this[2, 3] = depth / 2
     }
     val projection = Matrix(4, true).apply {
         this[3, 2] = -1.0 / distance

@@ -8,6 +8,12 @@ import java.awt.Desktop
 import java.nio.file.Paths
 import kotlin.system.measureTimeMillis
 
+fun debugDepth(canvas: Canvas) {
+    val image = canvas.debugDepth()
+    image.flipVertically()
+    val path = image.saveToDisk(Paths.get(".", "depthBuffer.png").toFile())
+    Desktop.getDesktop().open(path)
+}
 
 fun main() {
     val image = Image(800, 800)
@@ -28,4 +34,5 @@ fun main() {
 
     val path = image.saveToDisk()
     Desktop.getDesktop().open(path)
+    debugDepth(canvas)
 }

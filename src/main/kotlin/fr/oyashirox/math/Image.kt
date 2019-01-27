@@ -27,12 +27,11 @@ class Image(val width: Int, val height: Int, argbArray: IntArray? = null) {
             data[index] = color
         }
 
-    fun saveToDisk(): File {
+    fun saveToDisk(file: File = Paths.get(".", "generated.png").toFile()): File {
         val bufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
         val argbArray = data.map { it.argbColor }.toIntArray()
         bufferedImage.setRGB(0, 0, width, height, argbArray, 0, width)
 
-        val file = Paths.get(".", "generated.png").toAbsolutePath().normalize().toFile()
         println("Image saved to : ${file.absolutePath}")
         ImageIO.write(bufferedImage, "png", file)
         return file

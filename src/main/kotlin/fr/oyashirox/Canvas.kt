@@ -138,6 +138,11 @@ class Canvas(val image: Image) {
         }
     }
 
+    fun debugDepth(): Image {
+        val argbArray = zBuffer.map { Color(it.toInt(), it.toInt(), it.toInt()).argbColor }.toIntArray()
+        return Image(this.image.width, this.image.height, argbArray)
+    }
+
     private fun barycentric(triangle: List<Point>, point: Point): Vector {
         val (p1, p2, p3) = triangle
         //x is along AC, y is along AB and z is along AP
