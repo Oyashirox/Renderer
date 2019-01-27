@@ -10,6 +10,12 @@ class Matrix(val size: Int = 4, identity: Boolean = true) {
     }
 
     operator fun get(row: Int) = values.slice((row * size)..(((row + 1) * size) - 1))
+    operator fun set(row: Int, v: Vector) {
+        values[row * size] = v.x
+        values[row * size + 1] = v.y
+        values[row * size + 2] = v.z
+        values[row * size + 3] = 0.0
+    }
 
     operator fun times(other: Matrix): Matrix {
         if (size != other.size) throw IllegalStateException("Matrix should be of the same size")

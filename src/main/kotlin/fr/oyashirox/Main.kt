@@ -8,6 +8,7 @@ import java.awt.Desktop
 import java.nio.file.Paths
 import kotlin.system.measureTimeMillis
 
+@Suppress("unused")
 fun debugDepth(canvas: Canvas) {
     val image = canvas.debugDepth()
     image.flipVertically()
@@ -18,7 +19,8 @@ fun debugDepth(canvas: Canvas) {
 fun main() {
     val image = Image(800, 800)
     val canvas = Canvas(image)
-    val renderer = Renderer(canvas)
+    val camera = Camera(Vector(-1.0, -0.5, 3.0), image.width, image.height)
+    val renderer = Renderer(canvas, camera)
 
     val objFolder = Paths.get(".", "obj").normalize()
     val africanHeadFile = objFolder.resolve("diablo.obj").toFile()
@@ -27,6 +29,7 @@ fun main() {
     val texture = Texture.loadFromFile(africanHeadTexture)
 
     val time = measureTimeMillis {
+        renderer.camera.lookAt(Vector(0.0, 0.0, 0.0))
         renderer.render(model, texture, Vector(0.0, 0.0, -1.0).normalize())
         image.flipVertically()
     }
