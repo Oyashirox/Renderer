@@ -112,14 +112,9 @@ class Canvas(val image: Image) {
         val min = Point(triangle.minBy { it.x }!!.x, triangle.minBy { it.y }!!.y)
         val max = Point(triangle.maxBy { it.x }!!.x, triangle.maxBy { it.y }!!.y)
 
-        for (x in min.x..max.x) {
-            for (y in min.y..max.y) {
+        for (x in min.x.coerceAtLeast(0)..max.x.coerceAtMost(image.width - 1)) {
+            for (y in min.y.coerceAtLeast(0)..max.y.coerceAtMost(image.height - 1)) {
                 val index = x + y * image.width
-                if (index < 0 || index > image.data.size - 1 ||
-                    x < 0 || x > image.width - 1 ||
-                    y < 0 || y > image.height - 1
-                ) continue
-
                 val barycenter = barycentric(triangle, Point(x, y))
                 if (barycenter.x < 0 || barycenter.y < 0 || barycenter.z < 0) continue
                 val normal = interpolate(barycenter, face.normals).normalize()
@@ -130,7 +125,7 @@ class Canvas(val image: Image) {
 
                 val color = intensity * texture[textCoords]
 
-                if (zBuffer[index] < zValue) {
+                if (zValue >= 0 && zBuffer[index] < zValue) {
                     zBuffer[index] = zValue
                     image[x, y] = color
                 }
