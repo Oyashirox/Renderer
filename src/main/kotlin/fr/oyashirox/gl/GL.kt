@@ -33,7 +33,7 @@ class GL(val image: Image) {
     }
 
     fun debugDepth(): Image {
-        val argbArray = zBuffer.map { Color(it.toInt(), it.toInt(), it.toInt()).argbColor }.toIntArray()
+        val argbArray = zBuffer.map { Color(it.toInt(), it.toInt(), it.toInt()).argb }.toIntArray()
         return Image(this.image.width, this.image.height, argbArray)
     }
 
