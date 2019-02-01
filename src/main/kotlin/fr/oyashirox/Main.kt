@@ -20,17 +20,31 @@ fun debugDepth(gl: GL) {
     Desktop.getDesktop().open(path)
 }
 
+enum class Models(val prefix: String) {
+    DIABLO("diablo3"), AFRICAN("african_head");
+
+}
+fun loadModels(model: Models): Triple<Model, Texture, Texture> {
+    val objFolder = Paths.get(".", "obj").normalize()
+    val modelFile = objFolder.resolve(model.prefix + ".obj").toFile()
+    val textureFile = objFolder.resolve(model.prefix + "_diffuse.png").toFile()
+    val normalFile = objFolder.resolve(model.prefix + "_nm.png").toFile()
+
+    val obj = Model.fromObjFile(modelFile)
+    val texture = Texture.loadFromFile(textureFile)
+    val textureNormal = Texture.loadFromFile(normalFile)
+
+    return Triple(obj, texture, textureNormal)
+}
+
 fun main() {
     val image = Image(800, 800)
     val gl = GL(image)
     val camera = Camera(image.width, image.height)
     val renderer = Renderer(gl)
 
-    val objFolder = Paths.get(".", "obj").normalize()
-    val africanHeadFile = objFolder.resolve("diablo.obj").toFile()
-    val africanHeadTexture = objFolder.resolve("diablo3_pose_diffuse.png").toFile()
-    val model = Model.fromObjFile(africanHeadFile)
-    val texture = Texture.loadFromFile(africanHeadTexture)
+
+    val (model, texture, textureNormal) = loadModels(Models.DIABLO)
 
     val time = measureTimeMillis {
         camera.lookAt(Vector(1.0, 1.0, 4.0), Vector())
