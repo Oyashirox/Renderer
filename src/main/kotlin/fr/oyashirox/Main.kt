@@ -27,15 +27,15 @@ fun main() {
     val renderer = Renderer(gl)
 
     val objFolder = Paths.get(".", "obj").normalize()
-    val africanHeadFile = objFolder.resolve("african_head.obj").toFile()
-    val africanHeadTexture = objFolder.resolve("african_head_diffuse.png").toFile()
+    val africanHeadFile = objFolder.resolve("diablo.obj").toFile()
+    val africanHeadTexture = objFolder.resolve("diablo3_pose_diffuse.png").toFile()
     val model = Model.fromObjFile(africanHeadFile)
     val texture = Texture.loadFromFile(africanHeadTexture)
 
     val time = measureTimeMillis {
         camera.lookAt(Vector(1.0, 1.0, 4.0), Vector())
-        val shader: Shader = GouraudShader(Vector(-1.0, -1.0, 0.0).normalize(), camera.combinedMatrix)
-        renderer.render(model, texture, shader)
+        val shader: Shader = TextureShader(Vector(-1.0, -1.0, 0.0).normalize(), camera.combinedMatrix, texture)
+        renderer.render(model, shader)
         image.flipVertically()
     }
     println("time: ${time / 1000.0} s")

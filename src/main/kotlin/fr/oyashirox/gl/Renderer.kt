@@ -5,11 +5,10 @@ package fr.oyashirox.gl
 import fr.oyashirox.math.Point
 import fr.oyashirox.math.Vector
 import fr.oyashirox.model.Model
-import fr.oyashirox.model.Texture
 
 /** Use this class to render a model on a canvas*/
 class Renderer(val gl: GL) {
-    fun render(model: Model, texture: Texture, shader: Shader) {
+    fun render(model: Model, shader: Shader) {
 
         model.faces.forEach { face ->
             val fragments = mutableListOf<Point>()
