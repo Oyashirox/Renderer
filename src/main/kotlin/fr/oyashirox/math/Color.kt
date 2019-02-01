@@ -27,6 +27,11 @@ data class Color(val argb: Int) {
     inline val a: Int
         get() = argb and 0xFF000000.toInt() shr 24
 
+    fun toVector() = Vector(
+        r / 255.0,
+        g / 255.0,
+        b / 255.0
+    )
 
     companion object {
         val RED = Color(r = 255)

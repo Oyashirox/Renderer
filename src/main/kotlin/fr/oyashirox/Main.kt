@@ -48,7 +48,7 @@ fun main() {
 
     val time = measureTimeMillis {
         camera.lookAt(Vector(1.0, 1.0, 4.0), Vector())
-        val shader: Shader = TextureShader(Vector(-1.0, -1.0, 0.0).normalize(), camera.combinedMatrix, texture)
+        val shader: Shader = TextureShader(Vector(-1.0, -1.0, 0.0).normalize(), camera.combinedMatrix, texture, textureNormal)
         renderer.render(model, shader)
         image.flipVertically()
     }
