@@ -28,5 +28,6 @@ data class Face(
         }
     }
 
-    operator fun get(i: Int) = Triple(vertices[i], textures[i], normals[i])
+    val attributes: Collection<VertexAttributes> = (0 until vertices.size).map { this[it] }
+    operator fun get(i: Int) = VertexAttributes(vertices[i], textures[i], normals[i])
 }

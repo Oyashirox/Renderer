@@ -1,10 +1,10 @@
-package fr.oyashirox
+package fr.oyashirox.gl
 
 import fr.oyashirox.math.Matrix
 import fr.oyashirox.math.Vector
 
 @Suppress("MemberVisibilityCanBePrivate", "CanBeParameter")
-class Camera(val position: Vector, val width: Int, val height: Int) {
+class Camera(val width: Int, val height: Int) {
     val halfWidth = (width - 1) / 2.0
     val halfHeight = (height - 1) / 2.0
     val depth = 255.0
@@ -37,10 +37,10 @@ class Camera(val position: Vector, val width: Int, val height: Int) {
         get() = viewportMatrix * perspectiveMatrix * modelViewMatrix
 
     init {
-        lookAt(Vector(0.0, 0.0, 0.0))
+        lookAt(Vector(), Vector())
     }
 
-    fun lookAt(target: Vector, up: Vector = Vector(0.0, 1.0, 0.0)) {
+    fun lookAt(position: Vector, target: Vector, up: Vector = Vector(0.0, 1.0, 0.0)) {
         val bases = Matrix(4)
         val translation = Matrix(4)
 
