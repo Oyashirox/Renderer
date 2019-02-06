@@ -8,6 +8,7 @@ import fr.oyashirox.model.VertexAttributes
 interface Shader {
     /** List of all values that needs to be interpolated between vertices.
      *
+     * Vertex shader should add values here, and fragment should read it.
      * Right now it's only Vector, but we should also be able to interpolate Double.*/
     var interpolate: MutableList<Vector>
     fun vertex(context: GL, attributes: VertexAttributes): Point

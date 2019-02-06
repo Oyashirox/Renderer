@@ -31,6 +31,16 @@ class Matrix(val size: Int = 4, identity: Boolean = true) {
         return result
     }
 
+    fun transpose() {
+        for (x in 0 until size) {
+            for (y in x + 1 until size) {
+                val tmp = this[x, y]
+                this[x, y] = this[y, x]
+                this[y, x] = tmp
+            }
+        }
+    }
+
     fun toVector() = Vector(
         this[0,0] / this[3, 0],
         this[1,0] / this[3, 0],

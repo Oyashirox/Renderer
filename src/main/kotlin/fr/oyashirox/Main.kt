@@ -28,7 +28,7 @@ fun loadModels(model: Models): Triple<Model, Texture, Texture> {
     val objFolder = Paths.get(".", "obj").normalize()
     val modelFile = objFolder.resolve(model.prefix + ".obj").toFile()
     val textureFile = objFolder.resolve(model.prefix + "_diffuse.png").toFile()
-    val normalFile = objFolder.resolve(model.prefix + "_nm.png").toFile()
+    val normalFile = objFolder.resolve(model.prefix + "_nm_tangent.png").toFile()
 
     val obj = Model.fromObjFile(modelFile)
     val texture = Texture.loadFromFile(textureFile)
@@ -45,6 +45,8 @@ fun main() {
 
 
     val (model, texture, textureNormal) = loadModels(Models.DIABLO)
+//    val grid = Texture.loadFromFile(Paths.get(".", "obj", "grid.png").toFile())
+//    val defaultNormal = Texture.loadFromFile(Paths.get(".", "obj", "default_normal_tangent.png").toFile())
 
     val time = measureTimeMillis {
         camera.lookAt(Vector(1.0, 1.0, 4.0), Vector())
